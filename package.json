@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "node-webcam": "^0.3.4",
+    "play-sound": "^1.1.1",
     "request": "^2.81.0",
     "sharp": "^0.17.3"
   }

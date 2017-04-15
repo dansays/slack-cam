@@ -14,7 +14,7 @@ written for macOS, but in theory this should run on Windows (just skip step 2).
 
 Your `config.json` file can include a number of optional keys:
 
-- `delay`: Number of seconds to wait after "beep" sound before taking a picture (default: 1 second)
+- `delay`: Number of seconds to wait after "beep" sound before taking a picture (default: 2.5 seconds)
 - `frequency`: Number of minutes to wait between image capture (default: 5 minutes)
 - `device`: Name of camera device. Type `imagesnap -l` to list options. Defaults to "FaceTime HD Camera".
 

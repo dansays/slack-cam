@@ -8,7 +8,6 @@ let sound         = require('play-sound')();
 let config        = require('./config');
 config.delay      = config.delay || 2.5;
 config.frequency  = config.frequency || 5;
-config.camOptions = config.camOptions || {};
 
 // Create a new cam instance;
 let cam = nodecam.create({

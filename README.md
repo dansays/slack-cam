@@ -21,7 +21,7 @@ Your `config.json` file can include a number of optional keys:
 ## Issues
 
 This app is dependent on `node-webcam` which, in turn, is dependent on
-`imagesnap`, installed in `/usr/local/bin`. I've tried a number of options
-for running this process in the background, including `launchd` and
+`imagesnap`, installed by `brew` in `/usr/local/bin`. I've tried a number of
+options for running this process in the background, including `launchd` and
 [node-mac](https://github.com/coreybutler/node-mac), but all run as
 `root` and therefore have issues resolving the path to `imagesnap`.

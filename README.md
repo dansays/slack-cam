@@ -17,3 +17,11 @@ Your `config.json` file can include a number of optional keys:
 - `delay`: Number of seconds to wait after "beep" sound before taking a picture (default: 1 second)
 - `frequency`: Number of minutes to wait between image capture (default: 5 minutes)
 - `device`: Name of camera device. Type `imagesnap -l` to list options. Defaults to "FaceTime HD Camera".
+
+## Issues
+
+This app is dependent on `node-webcam` which, in turn, is dependent on
+`imagesnap`, installed in `/usr/local/bin`. I've tried a number of options
+for running this process in the background, including `launchd` and
+[node-mac](https://github.com/coreybutler/node-mac), but all run as
+`root` and therefore have issues resolving the path to `imagesnap`.

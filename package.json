@@ -1,13 +1,13 @@
 {
   "name": "slack-cam",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "A simple node app to capture a webcam image at a specified interval, and upload it to Slack as a profile picture",
+  "main": "src/app.js",
+  "author": "Daniel G. Budiac",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dansays/slack-cam.git"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "node-webcam": "^0.3.4",
     "play-sound": "^1.1.1",

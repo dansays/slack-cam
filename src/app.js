@@ -35,23 +35,30 @@ function beep() {
 // Grab an image from the webcam
 function captureImage() {
 	console.log('Capturing image...');
-	cam.capture('webcam', resizeImage);
+	cam.capture(`${__dirname}/webcam`, (err, buffer) => {
+		if (err) console.error(err);
+		else resizeImage(buffer);
+	});
+
 }
 
 
 // Resize and crop the image
-function resizeImage(err, buffer) {
+function resizeImage(buffer) {
 	console.log('Resizing and cropping...')
 	sharp(buffer)
 		.normalize()
 		.resize(480, 480)
 		.crop(sharp.strategy.entropy)
-		.toBuffer(uploadToSlack);
+		.toBuffer((err, buffer) => {
+			if (err) console.error(err)
+			else uploadToSlack(buffer);
+		});
 }
 
 
 // Upload the image to Slack
-function uploadToSlack(err, buffer) {
+function uploadToSlack(buffer) {
 	let endpoint = 'https://slack.com/api/users.setPhoto';
 	let req = request.post(endpoint);
 	let form = req.form();
@@ -60,7 +67,7 @@ function uploadToSlack(err, buffer) {
 	form.append('image', buffer, {filename: 'me', contentType: 'image/jpg'});
 
 	console.log('Uploading to Slack...')
-	req.on('end', done => console.log('Upload complete!'));
+	req.on('end', () => console.log('Upload complete!'));
 }
 
 

@@ -26,22 +26,27 @@ captureImage(); // Trigger immediately on load
 
 async function captureImage() {
 
+	let buffer;
+
 	console.log('Here we go...')
 	console.log('...say cheese!')
 	await beep(config.delay);
 
 	// First we grab an image from the webcam
 	console.log('...capturing image');
-	let camImageBuffer = await capture();
+	try {	buffer = await capture(); }
+	catch (err) { console.error(err); }
 
 	// Raw images are way too big. Let's resize it,
 	// and crop it down to a square.
 	console.log('...resizing and cropping');
-	let croppedImageBuffer = await resize(camImageBuffer);
+	try { buffer = await resize(buffer); }
+	catch (err) { console.error(err); }
 
 	// Lastly, let's send the new image to Slack.
 	console.log('...uploading to Slack');
-	await upload(croppedImageBuffer);
+	try { await upload(buffer); }
+	catch (err) { console.error(err); }
 	
 	// Done!
 	console.log('Done!');

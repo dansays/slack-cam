@@ -2,13 +2,15 @@
 let nodecam       = require('node-webcam');
 let sharp         = require('sharp');
 let request       = require('request-promise');
+let gm            = require('gm');
 let sound         = require('play-sound')();
 
 // Import config, and establish defaults
 let config        = require('./config');
 config.delay      = config.delay || 2.5;
 config.frequency  = config.frequency || 5;
-config.zoom       = config.zoom || 450;
+config.zoom       = config.zoom || 475;
+config.brightness = config.brightness || 100;
 
 // Create a new cam instance;
 let cam = nodecam.create({
@@ -40,6 +42,11 @@ async function captureImage() {
 	try {	buffer = await capture(); }
 	catch (err) { console.error(err); }
 
+	// Enhance
+	console.log('...enhancing');
+	try { buffer = await enhance(buffer); }
+	catch (err) { console.log(err); }
+
 	// Zoom!
 	console.log('...squishing vertically');
 	try { buffer = await zoom(buffer); }
@@ -68,6 +75,18 @@ async function captureImage() {
 				if (err) reject(err);
 				else resolve(buffer);
 			})
+		});
+	}
+
+	async function enhance(buffer) {
+		return new Promise((resolve, reject) => {
+			gm(buffer)
+				.enhance()
+				.modulate(config.brightness)
+				.toBuffer((err, buffer, info) => {
+					if (err) reject(err);
+					else resolve(buffer);
+				})
 		});
 	}
 

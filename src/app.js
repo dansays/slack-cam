@@ -4,6 +4,10 @@ let sharp         = require('sharp');
 let request       = require('request-promise');
 let gm            = require('gm');
 let sound         = require('play-sound')();
+let imgToAscii    = require('image-to-ascii');
+
+// Emit console log messages?
+let verbose = false;
 
 // Import config, and establish defaults
 let config        = require('./config');
@@ -31,40 +35,42 @@ captureImage(); // Trigger immediately on load
 async function captureImage() {
 
 	let buffer;
+	let slackResponse;
 
 	// Play a sound a few seconds before capture
-	console.log('Here we go...')
-	console.log('...say cheese!')
+	if (verbose) console.log('\n\nHere we go...');
+	if (verbose) console.log('...say cheese!');
 	sound.play('shutter.mp3');
 
 	// Grab an image from the webcam
-	console.log('...capturing image');
+	if (verbose) console.log('...capturing image');
 	try {	buffer = await capture(); }
 	catch (err) { console.error(err); }
 
 	// Enhance
-	console.log('...enhancing');
+	if (verbose) console.log('...enhancing');
 	try { buffer = await enhance(buffer); }
 	catch (err) { console.log(err); }
 
 	// Zoom!
-	console.log('...squishing vertically');
+	if (verbose) console.log('...squishing vertically');
 	try { buffer = await zoom(buffer); }
 	catch (err) { console.log(err); }
 
 	// Crop!
-	console.log('...cropping horizontally');
+	if (verbose) console.log('...cropping horizontally');
 	try { buffer = await crop(buffer); }
 	catch (err) { console.log(err); }	
 
 	// Send the new image to Slack.
-	console.log('...uploading to Slack');
-	try { await upload(buffer); }
+	if (verbose) console.log('...uploading to Slack');
+	try { slackResponse = JSON.parse(await upload(buffer)); }
 	catch (err) { console.error(err); }
 	
 	// Done!
-	console.log('Done!');
-	console.log('');
+	let imageUrl = slackResponse.profile.image_512;
+	try { process.stdout.write(await showAsciiPic(imageUrl)); }
+	catch (err) { console.error(err); }
 
 	//////////////////////////////////////////////////////////////
 
@@ -115,5 +121,19 @@ async function captureImage() {
 		form.append('token', config.slackApiToken);
 		form.append('image', buffer, {filename: 'me', contentType: 'image/jpg'});
 		return req;
+	}
+
+	async function showAsciiPic(urlOrPath) {
+		return new Promise((resolve, reject) => {
+			let options = {
+				size: { width: process.stdout.columns / 2, height: process.stdout.rows },
+				size_options: { preserve_aspect_ratio: false }
+			};
+
+			imgToAscii(urlOrPath, options, (err, converted) => {
+				if (err) reject(err);
+				else resolve(converted);
+			});
+		});
 	}
 }

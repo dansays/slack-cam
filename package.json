@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "gm": "^1.23.0",
+    "image-to-ascii": "^3.0.7",
     "node-webcam": "^0.3.4",
     "play-sound": "^1.1.1",
     "request": "^2.81.0",
